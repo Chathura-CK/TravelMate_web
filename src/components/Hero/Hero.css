@@ -6,7 +6,7 @@
     text-align: center;
     padding: 180px 2px;
     position: relative;
-    background: url('C:\Users\chath\Desktop\React projects\travelmate\src\assets\landing_background1.jpg') center/cover no-repeat; /* Replace with your image */
+    background: url('C:\Users\chath\Desktop\React projects\TravelMate_web\src\assets\landing_background1.jpg') center/cover no-repeat; /* Replace with your image */
     color: white;
     overflow: hidden;
 }
