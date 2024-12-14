@@ -18,6 +18,19 @@ const Navbar = ({ theme, setTheme }) => {
     return (
         <nav className={`navbar navbar-expand-lg navbar-${theme} bg-${theme}`}>
             <div className="container-fluid">
+
+                 {/* Toggle Button for Responsive Navbar */}
+                 <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbar"
+                >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+
                 {/* Logo */}
                 <a className="navbar-brand" href="/">
                     <img
@@ -38,7 +51,7 @@ const Navbar = ({ theme, setTheme }) => {
                 >
                     <div className="offcanvas-header">
                         <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-                            Menu
+                            TravelMate
                         </h5>
                         <button
                             type="button"
@@ -113,16 +126,7 @@ const Navbar = ({ theme, setTheme }) => {
                     className="toggle-icon ms-auto"
                 />
 
-                 {/* Toggle Button for Responsive Navbar */}
-                 <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasNavbar"
-                    aria-controls="offcanvasNavbar"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+                
             </div>
         </nav>
     );
