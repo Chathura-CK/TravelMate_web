@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/js/dist/offcanvas';
 import 'bootstrap/js/dist/dropdown';
@@ -7,22 +7,32 @@ import logo_light from '../../assets/logo.png';
 import logo_dark from '../../assets/logo.png';
 import toggle_light from '../../assets/night_icon.png';
 import toggle_dark from '../../assets/day_icon.png';
-import defaultProfilePic from '../../assets/sample_profile.jpeg'; // Default profile image
+import defaultProfilePic from '../../assets/sample_profile.jpeg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logout } from '../../redux/actions/authActions';
 
 const Navbar = ({ theme, setTheme }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to control dropdown visibility
+  const dispatch = useDispatch();
+  const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
+
   const toggleMode = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  const dispatch = useDispatch();
-  const { user, loading } = useSelector((state) => state.auth || {});
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prevState) => !prevState); // Toggle dropdown visibility
+  };
 
   return (
     <nav className={`navbar navbar-expand-lg navbar-${theme} bg-${theme}`}>
       <div className="container-fluid">
-        {/* Toggle Button for Responsive Navbar */}
+        {/* Toggle Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -42,7 +52,7 @@ const Navbar = ({ theme, setTheme }) => {
           />
         </a>
 
-        {/* Offcanvas */}
+        {/* Offcanvas Navbar */}
         <div
           className="offcanvas offcanvas-end"
           tabIndex="-1"
@@ -61,7 +71,6 @@ const Navbar = ({ theme, setTheme }) => {
             ></button>
           </div>
           <div className="offcanvas-body">
-            {/* Navigation Links */}
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
               <li className="nav-item">
                 <Link className="nav-link" to="/explore">
@@ -88,35 +97,50 @@ const Navbar = ({ theme, setTheme }) => {
         </div>
 
         {/* Profile or Sign-In Button */}
-        {user ? (
-          <div className="profile-dropdown">
-            <img
-              src={user?.profilePic || defaultProfilePic}
-              alt="Profile Pic"
-              className="profile-pic"
-            />
-            <span>{user?.name}</span>
-            <div className="dropdown-menu dropdown-menu-end">
-              <Link className="dropdown-item" to={`/profile/${user?._id}`}>
-                Profile
-              </Link>
-              <button
-                className="dropdown-item"
-                onClick={() => dispatch({ type: 'LOGOUT' })}
-              >
-                Logout
-              </button>
-            
-              
-            </div>
-            console.log("uuu");
-            
-          </div>
-        ) : (
-          !loading && <Link className="buttn" to="/login">Sign In</Link>
-        )}
+        {isAuthenticated ? (
+  <div className="profile-dropdown" onClick={toggleDropdown}>
+    {/* Profile Picture and Name */}
+    <img
+      src={user?.profileimage || defaultProfilePic} // Use optional chaining
+      alt="Profile"
+      className="profile-pic"
+    />
+    <span className="profile-name">
+      {user?.name || 'User'} {/* Fallback to 'User' if name is unavailable */}
+    </span>
 
-        {/* Theme Toggle Button */}
+    {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <div className="dropdown-menu dropdown-menu-end show">
+          <Link
+            className="dropdown-item"
+            to={`/profile/${user?._id}`}
+            onClick={() => setIsDropdownOpen(false)}
+          >
+            My Profile
+          </Link>
+          <button
+            className="dropdown-item"
+            onClick={() => {
+              handleLogout();
+              setIsDropdownOpen(false);
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  ) : (
+    !loading && (
+      <Link className="buttn" to="/login">
+        Sign In
+      </Link>
+    )
+  )}
+
+
+        {/* Theme Toggle */}
         <img
           onClick={toggleMode}
           src={theme === 'light' ? toggle_light : toggle_dark}

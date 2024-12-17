@@ -5,7 +5,7 @@ import email_icon from '../../assets/email_icon.png';
 import password_icon from '../../assets/password_icon.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/actions/authActions';
+import { login } from '../../redux/actions/authActions';
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -22,22 +22,16 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
+  
     try {
-      // Send login request
-      const { data } = await axios.post('http://localhost:5000/auth/login', formData);
-
-      const user = data.user; // Assume backend sends user object
-      setUser(user); // Update App state
-      localStorage.setItem('user', JSON.stringify(user)); // Persist user to localStorage
-      dispatch(loginSuccess(user)); // Update Redux state
-
+      dispatch(login(formData.email, formData.password)); // Trigger Redux action
       setSuccess('Login successful!');
       setTimeout(() => navigate('/'), 1000); // Redirect to home
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     }
   };
+  
 
   return (
     <div className='login-body'>
